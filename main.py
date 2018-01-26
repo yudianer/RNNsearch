@@ -15,7 +15,7 @@ import tensorflow as tf
 
 from metric import bleu
 from model import NMT, beamsearch
-from optimizer import optimizer
+from optimizer.optimizer import Optimizer
 from data import textreader, textiterator
 from data.plain import convert_data, data_length
 from data.vocab import load_vocab, invert_vocab
@@ -322,7 +322,7 @@ def default_option():
         "attention": 2048,
         "alpha": 5e-4,
         "batch": 128,
-        "optimizer": adam,
+        "optimizer": "adam",
         "norm": 5.0,
         "stop": 0,
         "decay": 0.5,
@@ -721,7 +721,7 @@ def decode(args):
         set_variables(tf.trainable_variables(), values)
 
         while True:
-            line = sys.stdin.readline()
+            line = raw_input("enter latin words:\n")#sys.stdin.readline()
 
             if line == "":
                 break
@@ -734,11 +734,13 @@ def decode(args):
 
             if len(tlist) == 0:
                 sys.stdout.write("\n")
+                print("\n")
                 score = -10000.0
             else:
                 best, score = tlist[0]
-                sys.stdout.write(" ".join(best[:-1]))
-                sys.stdout.write("\n")
+                print("".join(best[:-1]))
+                #sys.stdout.write(" ".join(best[:-1]))
+                #sys.stdout.write("\n")
 
             count = count + 1
             sys.stderr.write(str(count) + " ")
